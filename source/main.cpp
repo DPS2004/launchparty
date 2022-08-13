@@ -5,16 +5,33 @@
 #include <cstring>
 #include <string>
 
+#include <dirent.h>
+#include <unistd.h>
 
 bool doQuit = false;
 
 int coolInt = 0;
+
+const char *modfolder = "sdmc:/launchparty";
 
 void pr(std::string t, int x, int y)
 {
 	std::string printstr = "\x1b[" + std::to_string(y + 1) + ";" + std::to_string(x).c_str() + "H" + t;
 	printf(printstr.c_str() );
 	
+}
+
+void init()
+{
+	//set up file stuff
+	
+	if(chdir("sdmc:/") == 0)
+	{
+		if(chdir(modfolder) == -1)
+		{
+			mkdir(modfolder, 0777);
+		}
+	}
 }
 
 void update()
@@ -70,11 +87,13 @@ void draw()
 
 int main(int argc, char **argv)
 {
+	
+	
 	gfxInitDefault();
 	//use console for now, eventually probably use citro2d?
 	consoleInit(GFX_TOP, NULL);
 	
-	
+	init();
 	
 	while (aptMainLoop())
 	{
